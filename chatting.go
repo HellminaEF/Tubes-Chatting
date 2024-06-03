@@ -63,5 +63,5 @@ func menolak(username string){
 			return
 		}
 	}
-	fmt.Println("Username tidak valid")
+	fmt.Println("Username tidak valid.")
 }
