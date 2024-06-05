@@ -63,5 +63,15 @@ func menolak(username string){
 			return
 		}
 	}
-	fmt.Println("Username tidak valid.")
+	fmt.Println("Username tidak valid")
+}
+
+//Procedure untuk print daftar user yang sudah disetujui oleh Admin
+func printUsers(){
+	fmt.Println("Daftar user yang sudah disetujui :")
+	for i := 0; i < jumlah_User; i++{
+		if users[i].Menyetujui{
+			fmt.Printf("Id : %d, Username : %s\n", users[i].ID, users[i].Username)
+		}
+	}
 }
