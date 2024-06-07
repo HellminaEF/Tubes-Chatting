@@ -9,98 +9,22 @@ const(
 
 type User struct{
 	ID int
+	Name string
 	Username string
 	Password string
-	Disetujui bool
+	Approved bool
 }
 
 type Message struct{
-	Username_Pengirim string
-	Username_Penerima string
-	Konten string
+	Sender string
+	Receiver string
+	Content string
 }
 
 var users [MAX_USERS]User
-var jumlah_User int
+var userCount int
 var messages [MAX_MESSAGES]Message
-var jumlah_Message int
-
-//Procedure Registrasi (Hellmina Enjelina Fitri)
-func register(username, password string){
-	User_Baru := User{
-		ID: jumlah_User + 1,
-		Username: username,
-		Password: password,
-		Disetujui: false,
-	}
-
-	users[jumlah_User] = User_Baru
-	jumlah_User++
-	fmt.Printf("Registrasi akun %s berhasil silahkan tunggu persetujuan dari Admin.\n", username)
-}
-
-//Procedur Disetujui pembuatan akun oleh Admin (Hellmina Enjelina Fitri)
-func disetujui(username string){
-	for i := 0; i < jumlah_User; i++{
-		if users[i].Username == username{
-			users[i].Disetujui = true
-			fmt.Printf("Akun %s telah disetujui oleh Admin.\n", users[i].Username)
-			return
-		}
-	}
-	fmt.Println("Username tidak valid")
-}
-
-//Procedure penolakan pembuatan akun oleh Admin (Hellmina Enjelina Fitri)
-func ditolak(username string){
-	for i := 0; i < jumlah_User; i++{
-		if users[i].Username == username{
-			fmt.Printf("Akun %s ditolak.\n", users[i].Username)
-			for j := i; j < jumlah_User - 1; j++{
-				users[j] = users[j - 1]
-			}
-			jumlah_User--
-			return
-		}
-	}
-	fmt.Println("Username tidak valid")
-}
-
-//Procedure untuk print daftar user yang sudah disetujui oleh Admin (Hellmina Enjelina Fitri)
-func printUsers(){
-	fmt.Println("Daftar user yang sudah disetujui :")
-	for i := 0; i < jumlah_User; i++{
-		if users[i].Disetujui{
-			fmt.Printf("Id : %d, Username : %s\n", users[i].ID, users[i].Username)
-		}
-	}
-}
-
-//Procedure untuk kirim pesan pribadi (Hellmina Enjelina Fitri)
-func kirimPesan(username_Pengirim, username_Penerima, konten string){
-	user_Disetujui, penerima_Disetujui := false, false
-	for i := 0; i < jumlah_User; i++ {
-		if users[i].Username == username_Pengirim && users[i].Disetujui {
-			user_Disetujui = true
-		}
-		if users[i].Username == username_Penerima && users[i].Disetujui {
-			penerima_Disetujui = true
-		}
-	}
-	if user_Disetujui && penerima_Disetujui {
-		newMessage := Message{
-			Username_Pengirim: username_Pengirim,
-			Username_Penerima: username_Penerima,
-			Konten: konten,
-		}
-		messages[jumlah_Message] = newMessage
-		jumlah_Message++
-		fmt.Println("Pesan berhasil dikirim.")
-	} else {
-		fmt.Println("Salah satu akun atau keduanya belum disetujui.")
-	}
-}
-
+var messageCount int
 
 //fungsi main (Hellmina Enjelina Fitri)
 func main(){
@@ -117,12 +41,14 @@ func main(){
 		fmt.Scan(&choice)
 
 		if choice == 1 {
-			var username, password string
+			var name, username, password string
+			fmt.Print("Masukkan Nama: ")
+			fmt.Scan(&name)
 			fmt.Print("Masukkan username: ")
 			fmt.Scan(&username)
 			fmt.Print("Masukkan password: ")
 			fmt.Scan(&password)
-			register(username, password)
+			register(name, username, password)
 		} else if choice == 2{
 			var username, password string
 			fmt.Print("Masukan username: ")
@@ -131,8 +57,8 @@ func main(){
 			fmt.Scan(&password)
 
 			validLogin := false
-			for i := 0; i < jumlah_User; i++ {
-				if users[i].Username == username && users[i].Password == password && users[i].Disetujui {
+			for i := 0; i < userCount; i++ {
+				if users[i].Username == username && users[i].Password == password && users[i].Approved {
 					validLogin = true
 					break
 				}
@@ -158,12 +84,12 @@ func main(){
 					}
 
 					if subChoice == 1{
-						var username_Penerima, konten string
+						var receiver, content string
 						fmt.Print("Masukan username tujuan: ")
-						fmt.Scan(&username_Penerima)
+						fmt.Scan(&receiver)
 						fmt.Print("Masukan pesan: ")
-						fmt.Scan(&konten)
-						kirimPesan(username, username_Penerima, konten)
+						fmt.Scan(&content)
+						kirimPesan(username, receiver, content)
 					} else if subChoice == 2{
 						// Buat Grup
 					} else if subChoice == 3{
@@ -177,7 +103,7 @@ func main(){
 					}
 				}
 			} else {
-				fmt.Println("Username tidak valid, Password salah, atau Akun belum disetujui.")
+				fmt.Println("Username tidak valid, Password salah, atau Akun belum Approved.")
 			}
 		} else if choice == 3{
 			var admin_Choice int
@@ -186,7 +112,7 @@ func main(){
 				fmt.Println("-------- Menu Admin --------")
 				fmt.Println("1. Setujui Akun")
 				fmt.Println("2. Tolak Akun")
-				fmt.Println("3. Cetak Daftar Akun yang Disetujui")
+				fmt.Println("3. Cetak Daftar Akun yang Approved")
 				fmt.Println("4. Kembali ke Menu Utama")
 				fmt.Println("----------------------------")
 				fmt.Print("Pilih Opsi: ")
@@ -200,12 +126,12 @@ func main(){
 					var username string
 					fmt.Print("Masukan username yang ingin di setujui: ")
 					fmt.Scan(&username)
-					disetujui(username)
+					approved(username)
 				} else if admin_Choice == 2{
 					var username string
 					fmt.Print("Masukan username yang ingin di tolak: ")
 					fmt.Scan(&username)
-					ditolak(username)
+					rejected(username)
 				} else if admin_Choice == 3{
 					printUsers()
 				} else{
@@ -213,10 +139,96 @@ func main(){
 				}
 			}
 		} else if choice == 4{
-			fmt.Println("Keluar dari program.")
+			fmt.Println("Keluar dari program...")
 			return
 		} else {
 			fmt.Println("Opsi tidak valid, silahkan pilih lagi.")
 		}
+	}
+}
+
+//Procedure Registrasi (Hellmina Enjelina Fitri)
+func register(name, username, password string){
+	for i := 0; i < userCount; i++ {
+		if users[i].Username == username {
+			fmt.Printf("Username %s sudah digunakan. Silakan buat dengan username lain.\n", username)
+			return
+		}
+	}
+
+	new_User := User{
+		ID: userCount + 1,
+		Name: name,
+		Username: username,
+		Password: password,
+		Approved: false,
+	}
+
+	users[userCount] = new_User
+	userCount++
+	fmt.Printf("Registrasi akun %s berhasil silahkan tunggu persetujuan dari Admin.\n", username)
+}
+
+//Procedur disetujui pembuatan akun oleh Admin (Hellmina Enjelina Fitri)
+func approved(username string){
+	for i := 0; i < userCount; i++{
+		if users[i].Username == username{
+			users[i].Approved = true
+			fmt.Printf("Akun %s telah disetujui oleh Admin.\n", users[i].Username)
+			return
+		}
+	}
+	fmt.Println("Username tidak ditemukan")
+}
+
+//Procedure penolakan pembuatan akun oleh Admin (Hellmina Enjelina Fitri)
+func rejected(username string){
+	for i := 0; i < userCount; i++{
+		if users[i].Username == username{
+			fmt.Printf("Akun %s ditolak.\n", users[i].Username)
+			for j := i; j < userCount - 1; j++{
+				users[j] = users[j - 1]
+			}
+			userCount--
+			return
+		}
+	}
+	fmt.Println("Username tidak ditemukan")
+}
+
+//Procedure untuk print daftar user yang sudah Approved oleh Admin (Hellmina Enjelina Fitri)
+func printUsers(){
+	fmt.Println("Daftar user:")
+	for i := 0; i < userCount; i++ {
+		status := "Belum disetujui"
+		if users[i].Approved {
+			status = "Sudah disetujui"
+		}
+		fmt.Printf("ID: %d, Nama: %s, Username: %s, Status: %s\n", users[i].ID, users[i].Name, users[i].Username, status)
+	}
+}
+
+//Procedure untuk kirim pesan pribadi (Hellmina Enjelina Fitri)
+func kirimPesan(sender, receiver, content string){
+	user_Approved, penerima_Approved := false, false
+	for i := 0; i < userCount; i++ {
+		if users[i].Username == sender && users[i].Approved {
+			user_Approved = true
+		}
+		if users[i].Username == receiver && users[i].Approved {
+			penerima_Approved = true
+		}
+	}
+	if user_Approved && penerima_Approved {
+		newMessage := Message{
+			Sender: sender,
+			Receiver: receiver,
+			Content: content,
+		}
+		messages[messageCount] = newMessage
+		messageCount++
+		fmt.Println("Pesan berhasil dikirim.")
+	} else {
+		fmt.Println("Salah satu akun atau keduanya belum disetujui.")
 	}
 }
