@@ -26,7 +26,7 @@ var userCount int
 var messages [MAX_MESSAGES]Message
 var messageCount int
 
-//fungsi main (Hellmina Enjelina Fitri)
+//Fungsi main (Hellmina Enjelina Fitri)
 func main(){
 	var choice int
 	for{
@@ -89,7 +89,7 @@ func main(){
 						fmt.Scan(&receiver)
 						fmt.Print("Masukan pesan: ")
 						fmt.Scan(&content)
-						kirimPesan(username, receiver, content)
+						sendPrivateMessage(username, receiver, content)
 					} else if subChoice == 2{
 						// Buat Grup
 					} else if subChoice == 3{
@@ -147,7 +147,7 @@ func main(){
 	}
 }
 
-//Procedure Registrasi (Hellmina Enjelina Fitri)
+//Fungsi Registrasi (Hellmina Enjelina Fitri)
 func register(name, username, password string){
 	for i := 0; i < userCount; i++ {
 		if users[i].Username == username {
@@ -169,7 +169,7 @@ func register(name, username, password string){
 	fmt.Printf("Registrasi akun %s berhasil silahkan tunggu persetujuan dari Admin.\n", username)
 }
 
-//Procedur disetujui pembuatan akun oleh Admin (Hellmina Enjelina Fitri)
+//Fungsi disetujui pembuatan akun oleh Admin (Hellmina Enjelina Fitri)
 func approved(username string){
 	for i := 0; i < userCount; i++{
 		if users[i].Username == username{
@@ -181,7 +181,7 @@ func approved(username string){
 	fmt.Println("Username tidak ditemukan")
 }
 
-//Procedure penolakan pembuatan akun oleh Admin (Hellmina Enjelina Fitri)
+//Fungsi penolakan pembuatan akun oleh Admin (Hellmina Enjelina Fitri)
 func rejected(username string){
 	for i := 0; i < userCount; i++{
 		if users[i].Username == username{
@@ -196,7 +196,7 @@ func rejected(username string){
 	fmt.Println("Username tidak ditemukan")
 }
 
-//Procedure untuk print daftar user yang sudah Approved oleh Admin (Hellmina Enjelina Fitri)
+//Fungsi untuk print daftar user yang sudah Approved oleh Admin (Hellmina Enjelina Fitri)
 func printUsers(){
 	fmt.Println("Daftar user:")
 	for i := 0; i < userCount; i++ {
@@ -208,8 +208,8 @@ func printUsers(){
 	}
 }
 
-//Procedure untuk kirim pesan pribadi (Hellmina Enjelina Fitri)
-func kirimPesan(sender, receiver, content string){
+//Fungsi untuk kirim pesan pribadi (Hellmina Enjelina Fitri)
+func sendPrivateMessage(sender, receiver, content string){
 	user_Approved, penerima_Approved := false, false
 	for i := 0; i < userCount; i++ {
 		if users[i].Username == sender && users[i].Approved {
