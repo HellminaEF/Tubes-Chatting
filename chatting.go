@@ -266,6 +266,7 @@ func sendPrivateMessage(sender, receiver, content string) {
 	}
 }
 
+//Fungsi untuk membuat group (Muhammad Haiqal Patria Iskandar)
 func createGroup(groupName, creatorUsername string) {
 	for _, group := range groups {
 		if group.Name == groupName {
@@ -282,6 +283,7 @@ func createGroup(groupName, creatorUsername string) {
 	fmt.Printf("Group %s created successfully.\n", groupName)
 }
 
+//Fungsi untuk menambahkan anggota group (Muhammad Haiqal Patria Iskandar)
 func addMemberToGroup(groupName, memberUsername string) {
 	for i, group := range groups {
 		if group.Name == groupName {
@@ -299,6 +301,7 @@ func addMemberToGroup(groupName, memberUsername string) {
 	fmt.Printf("Group %s not found.\n", groupName)
 }
 
+//Fungsi untuk mengirim pesan ke group (Muhammad Haiqal Patria Iskandar)
 func sendGroupMessage(groupName, sender, content string) {
 	for _, group := range groups {
 		if group.Name == groupName {
@@ -328,6 +331,7 @@ func sendGroupMessage(groupName, sender, content string) {
 	fmt.Printf("Group %s not found.\n", groupName)
 }
 
+//Fungsi untuk menampilkan anggota di dalam group (Muhammad Haiqal Patria Iskandar)
 func viewGroupMembers(groupName string) {
 	for _, group := range groups {
 		if group.Name == groupName {
