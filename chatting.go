@@ -252,6 +252,7 @@ func sendPrivateMessage(sender, receiver, content string) {
 			receiverApproved = true
 		}
 	}
+	
 	if userApproved && receiverApproved {
 		newMessage := Message{
 			Sender:   sender,
@@ -285,20 +286,35 @@ func createGroup(groupName, creatorUsername string) {
 
 //Fungsi untuk menambahkan anggota group (Muhammad Haiqal Patria Iskandar)
 func addMemberToGroup(groupName, memberUsername string) {
+
+	userExists := false
+	for _, user := range users {
+		if user.Username == memberUsername && user.Approved {
+			userExists = true
+			break
+		}
+	}
+
+	if !userExists {
+		fmt.Printf("User %s tidak ditemukan atau belum disetujui.\n", memberUsername)
+		return
+	}
+
+	// Jika pengguna valid, lanjutkan menambahkan ke grup
 	for i, group := range groups {
 		if group.Name == groupName {
 			for _, member := range group.Members {
 				if member == memberUsername {
-					fmt.Printf("User %s is already a member of %s.\n", memberUsername, groupName)
+					fmt.Printf("User %s sudah merupakan anggota dari grup %s.\n", memberUsername, groupName)
 					return
 				}
 			}
 			groups[i].Members = append(groups[i].Members, memberUsername)
-			fmt.Printf("User %s added to group %s successfully.\n", memberUsername, groupName)
+			fmt.Printf("User %s berhasil ditambahkan ke grup %s.\n", memberUsername, groupName)
 			return
 		}
 	}
-	fmt.Printf("Group %s not found.\n", groupName)
+	fmt.Printf("Grup %s tidak ditemukan.\n", groupName)
 }
 
 //Fungsi untuk mengirim pesan ke group (Muhammad Haiqal Patria Iskandar)
